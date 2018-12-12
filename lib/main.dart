@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tfl/tfl/api.dart';
 import 'package:tfl/widgets/StatusIndicator.dart';
 
 void main() => runApp(MyApp());
@@ -54,6 +53,6 @@ class _HomePageState extends State<HomePage> {
           // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
         ),
-        body: StatusIndicator(TflApi().getLineStatus('district')));
+        body: StatusIndicator());
   }
 }
