@@ -19,6 +19,32 @@ class TflApi {
     return result;
   }
 
+  Future<List> getStopPoints(lat, lon) async {
+    try {
+      final geoParams = {
+        'stopTypes': 'NaptanMetroStation',
+        'lat': lat.toString(),
+        'lon': lon.toString(),
+        'radius': '2000'
+      };
+      final response = await this._getRequest('/StopPoint', params: geoParams);
+      final result = jsonDecode(response.body);
+      return result['stopPoints'];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<List> getLinesByStopPoint(String naptanId) async {
+    try {
+      final response = await this._getRequest('/StopPoint/$naptanId/Route');
+      final result = jsonDecode(response.body);
+      return result['stopPoints'];
+    } catch (error) {
+      throw error;
+    }
+  }
+
   Future<http.Response> _getRequest(path, {Map<String, String> params}) {
     if (params == null) {
       params = {};
@@ -28,6 +54,12 @@ class TflApi {
     final uri = Uri.https(url, path, params);
     final headers = {'Content-Type': 'application/json'};
 
-    return http.get(uri, headers: headers);
+    final request = http.get(uri, headers: headers);
+
+    request.catchError((error) {
+      throw error;
+    });
+
+    return request;
   }
 }
