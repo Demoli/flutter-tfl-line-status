@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tfl/widgets/nearest_station.dart';
-import 'package:tfl/widgets/status_indicator.dart';
 
 void main() => runApp(MyApp());
 
@@ -35,6 +34,6 @@ class _HomePageState extends State<HomePage> {
           // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
         ),
-        body: Column(children: <Widget>[ NearestStation(), StatusIndicator()]));
+        body: NearestStation());
   }
 }

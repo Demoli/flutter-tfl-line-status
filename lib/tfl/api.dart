@@ -11,12 +11,11 @@ class TflApi {
 
   final String appKey = 'fbe79c3976b5e59d5bea01312932bcab';
 
-  Future<Map> getLineStatus(String id) async {
-    final response = await this._getRequest('/line/district/status');
+  Future<List> getLineStatus(List stationIds) async {
+    final implodedStations = stationIds.join(",");
+    final response = await this._getRequest('/line/$implodedStations/status');
 
-    final Map result = jsonDecode(response.body).removeLast();
-
-    return result;
+    return jsonDecode(response.body);
   }
 
   Future<List> getStopPoints(lat, lon) async {
@@ -39,7 +38,7 @@ class TflApi {
     try {
       final response = await this._getRequest('/StopPoint/$naptanId/Route');
       final result = jsonDecode(response.body);
-      return result['stopPoints'];
+      return result;
     } catch (error) {
       throw error;
     }
