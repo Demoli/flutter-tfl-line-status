@@ -49,24 +49,18 @@ class _StatusIndicatorState extends State<StatusIndicator> {
         itemBuilder: (BuildContext context, int index) {
           final item = data[index];
           final lineStatus =
-              item['lineStatuses'].removeLast()['statusSeverityDescription'];
+              item['lineStatuses'].removeLast();
 
-          int bgColor = 0xFF66FF00;
-          String statusText = 'Good to go';
+          final severity = lineStatus['statusSeverityDescription'];
 
-          switch (lineStatus) {
+          int bgColor = 0XFF76FF03;
+
+          switch (severity) {
             case "Minor Delays":
-              bgColor = 0xFFFF9900;
-              statusText = "Minor delays, consider staying home";
-              break;
             case 'Severe Delays':
-              bgColor = 0xFFFF3300;
-              statusText = "Severe delays, just stay home";
-              break;
             case 'Suspended':
             case 'Part Suspended':
-              bgColor = 0xFFFF3300;
-              statusText = "Suspended, just give up";
+              bgColor = 0XFFB71C1C;
               break;
           }
 
@@ -76,10 +70,9 @@ class _StatusIndicatorState extends State<StatusIndicator> {
                 decoration: BoxDecoration(color: Color(bgColor)),
                 child: Column(
                   children: <Widget>[
-                    Text(item['name']),
-                    Text(statusText,
-                        style:
-                            TextStyle(color: Color(0xFF000000), fontSize: 20))
+                    Text(item['name'], style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 20)),
+                    Text(severity, style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 25)),
+                    Text(lineStatus['reason'], style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 15))
                   ],
                 ),
               )
