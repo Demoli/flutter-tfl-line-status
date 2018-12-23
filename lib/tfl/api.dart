@@ -18,7 +18,7 @@ class TflApi {
     return jsonDecode(response.body);
   }
 
-  Future<List> getStopPoints(lat, lon) async {
+  Future<List> getStopPointsByLocation(lat, lon) async {
     try {
       final geoParams = {
         'stopTypes': 'NaptanMetroStation',
@@ -36,9 +36,20 @@ class TflApi {
 
   Future<List> getLinesByStopPoint(String naptanId) async {
     try {
-      final response = await this._getRequest('/StopPoint/$naptanId/Route');
+      final response = await this._getRequest('/StopPoint/$naptanId');
       final result = jsonDecode(response.body);
-      return result;
+      return result['lines'];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<List> searchStationByName(String name) async {
+    try {
+      final params = {'query': name, 'modes': 'tube,overground,tflrail'};
+      final response = await this._getRequest('/StopPoint/Search', params: params);
+      final result = jsonDecode(response.body);
+      return result['matches'];
     } catch (error) {
       throw error;
     }

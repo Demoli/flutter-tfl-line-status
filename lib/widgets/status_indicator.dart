@@ -48,8 +48,7 @@ class _StatusIndicatorState extends State<StatusIndicator> {
         shrinkWrap: true,
         itemBuilder: (BuildContext context, int index) {
           final item = data[index];
-          final lineStatus =
-              item['lineStatuses'].removeLast();
+          final lineStatus = item['lineStatuses'].removeLast();
 
           final severity = lineStatus['statusSeverityDescription'];
 
@@ -70,9 +69,15 @@ class _StatusIndicatorState extends State<StatusIndicator> {
                 decoration: BoxDecoration(color: Color(bgColor)),
                 child: Column(
                   children: <Widget>[
-                    Text(item['name'], style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 20)),
-                    Text(severity, style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 25)),
-                    Text(lineStatus['reason'], style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 15))
+                    Text(item['name'],
+                        style:
+                            TextStyle(color: Color(0xFFFFFFFF), fontSize: 20)),
+                    Text(severity,
+                        style:
+                            TextStyle(color: Color(0xFFFFFFFF), fontSize: 25)),
+                    Text(lineStatus['reason'] ?? "",
+                        style:
+                            TextStyle(color: Color(0xFFFFFFFF), fontSize: 15))
                   ],
                 ),
               )

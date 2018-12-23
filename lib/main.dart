@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tfl/screens/home_screen.dart';
+import 'package:tfl/screens/station_search.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,10 +12,8 @@ class MyApp extends StatelessWidget {
       title: 'TFL Line Status',
       initialRoute: '/',
       routes: {
-        // When we navigate to the "/" route, build the FirstScreen Widget
         '/': (context) => HomeScreen(),
-        // When we navigate to the "/second" route, build the SecondScreen Widget
-//        '/second': (context) => SecondScreen(),
+        '/search': (context) => StationSearch(),
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,
