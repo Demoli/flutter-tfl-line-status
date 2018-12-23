@@ -47,7 +47,7 @@ class _StationDetailState extends State<StationDetail> {
                   return Text('Error: ${snapshot.error}');
                 }
 
-                final lineIdRegex = new RegExp(r"^[a-zA-Z]+$");
+                final lineIdRegex = new RegExp(r"^[a-zA-Z-]+$");
 
                 final lineIds = snapshot.data
                     .where((line) {
