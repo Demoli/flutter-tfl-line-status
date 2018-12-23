@@ -17,13 +17,17 @@ class StationDetail extends StatefulWidget {
 class _StationDetailState extends State<StationDetail> {
   bool isHomeStation = false;
 
+
+
   @override
   Widget build(BuildContext context) {
     final lineFuture = TflApi().getLinesByStopPoint(widget.stopPoint['id']);
 
     final homeStationFuture = HomeStation().get().then((onValue) {
       if (onValue != null) {
-        isHomeStation = true;
+        if(onValue['id'] == widget.stopPoint['id']) {
+          isHomeStation = true;
+        }
       }
     });
 

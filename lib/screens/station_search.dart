@@ -1,10 +1,8 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:tfl/screens/station_detail_screen.dart';
 import 'package:tfl/tfl/api.dart';
+import 'package:tfl/widgets/global_actions.dart';
 
 class StationSearch extends StatefulWidget {
   @override
@@ -12,20 +10,11 @@ class StationSearch extends StatefulWidget {
 }
 
 class _StationSearchState extends State<StationSearch> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _typeAheadController = TextEditingController();
-
-  String _selectedCity;
-
-//  String selectedStation;
-
-//  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-//  final TextEditingController _typeAheadController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          actions: GlobalActions(context),
           // Here we take the value from the StationSearch object that was created by
           // the App.build method, and use it to set our appbar title.
           title: Text("Search Station"),
@@ -45,9 +34,6 @@ class _StationSearchState extends State<StationSearch> {
                         await TflApi().searchStationByName(pattern);
 
                     return stations;
-//                    return stations
-//                        .where((item) => item['id'].length >= 10)
-//                        .toList();
                   },
                   itemBuilder: (context, suggestion) {
                     return ListTile(

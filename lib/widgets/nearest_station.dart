@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:tfl/tfl/api.dart';
 import 'package:tfl/widgets/station_detail.dart';
-import 'package:tfl/widgets/status_indicator.dart';
 
 class NearestStation extends StatefulWidget {
   Future<Position> locationFuture;
