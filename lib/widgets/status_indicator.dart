@@ -53,13 +53,16 @@ class _StatusIndicatorState extends State<StatusIndicator> {
           final severity = lineStatus['statusSeverityDescription'];
 
           int bgColor = 0XFF76FF03;
+          int txtColor = 0XFF000000;
 
           switch (severity) {
             case "Minor Delays":
             case 'Severe Delays':
             case 'Suspended':
             case 'Part Suspended':
+            case 'Part Closure':
               bgColor = 0XFFB71C1C;
+              txtColor = 0XFFFFFFFF;
               break;
           }
 
@@ -67,14 +70,16 @@ class _StatusIndicatorState extends State<StatusIndicator> {
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(color: Color(bgColor)),
+                padding: EdgeInsets.all(10.0),
+                margin: EdgeInsets.all(5.0),
                 child: Column(
                   children: <Widget>[
                     Text(item['name'],
                         style:
-                            TextStyle(color: Color(0xFFFFFFFF), fontSize: 20)),
+                            TextStyle(color: Color(txtColor), fontSize: 20)),
                     Text(severity,
                         style:
-                            TextStyle(color: Color(0xFFFFFFFF), fontSize: 25)),
+                            TextStyle(color: Color(txtColor), fontSize: 25)),
                     Text(lineStatus['reason'] ?? "",
                         style:
                             TextStyle(color: Color(0xFFFFFFFF), fontSize: 15))
