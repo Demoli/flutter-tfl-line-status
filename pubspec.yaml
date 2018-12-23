@@ -22,6 +22,7 @@ dependencies:
   http: ^0.12.0
   geolocator: ^2.1.1
   flutter_typeahead: ^0.4.1
+  shared_preferences: ^0.4.3
 
 dev_dependencies:
   flutter_test:

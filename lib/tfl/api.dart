@@ -72,4 +72,6 @@ class TflApi {
 
     return request;
   }
+
+  void getStationById() {}
 }
