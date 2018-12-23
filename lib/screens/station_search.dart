@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:tfl/screens/station_detail.dart';
+import 'package:tfl/screens/station_detail_screen.dart';
 import 'package:tfl/tfl/api.dart';
 
 class StationSearch extends StatefulWidget {
@@ -56,7 +56,7 @@ class _StationSearchState extends State<StationSearch> {
                   },
                   onSuggestionSelected: (suggestion) {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => StationDetail(suggestion)));
+                        builder: (context) => StationDetailScreen(suggestion)));
                   },
                 ),
               ],

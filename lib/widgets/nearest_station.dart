@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:tfl/screens/station_detail.dart';
 import 'dart:async';
 
 import 'package:tfl/tfl/api.dart';
+import 'package:tfl/widgets/station_detail.dart';
 import 'package:tfl/widgets/status_indicator.dart';
 
 class NearestStation extends StatefulWidget {
@@ -57,16 +57,7 @@ class _NearestStationState extends State<NearestStation> {
 
                         final closest = stopPoints.removeAt(0);
 
-                        return ListTile(
-                            title: Text(closest['commonName']),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => StationDetail(closest),
-                                ),
-                              );
-                            });
+                        return StationDetail(closest);
                     }
                   });
           }

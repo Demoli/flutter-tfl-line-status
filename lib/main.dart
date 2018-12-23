@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'TFL Line Status',
-      initialRoute: '/',
+      initialRoute: '/search',
       routes: {
         '/': (context) => HomeScreen(),
         '/search': (context) => StationSearch(),
