@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tfl/screens/home_screen.dart';
 import 'package:tfl/screens/nearest_station.dart';
+import 'package:tfl/screens/sandbox.dart';
 import 'package:tfl/screens/station_search.dart';
 
 void main() => runApp(MyApp());
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomeScreen(),
         '/nearest': (context) => NearestStationScreen(),
         '/search': (context) => StationSearch(),
+        '/sandbox': (context) => SandboxScreen()
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,
