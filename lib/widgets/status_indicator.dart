@@ -1,18 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:tfl/tfl/api.dart';
 
 class StatusIndicator extends StatefulWidget {
-  Future<List> statusFuture;
   List lineIds;
 
   StatusIndicator(List lineIds) {
-    statusFuture = TflApi().getLineStatus(lineIds);
-
     this.lineIds = lineIds;
   }
 
   @override
-  _StatusIndicatorState createState() => _StatusIndicatorState();
+  _StatusIndicatorState createState() => _StatusIndicatorState(this.lineIds);
 }
 
 class Expandable {
@@ -23,23 +22,51 @@ class Expandable {
 }
 
 class _StatusIndicatorState extends State<StatusIndicator> {
+  final lineIds;
+
   List items = [];
 
   bool snapshotLoaded = false;
 
+  static Timer refresh;
+
+  static Future<List> statusFuture;
+
+
+  _StatusIndicatorState(this.lineIds) {
+    initFuture();
+
+    if(refresh == null) {
+      refresh = new Timer.periodic(Duration(minutes: 30), (Timer t) {
+        reloadFuture();
+      });
+    }
+  }
+
+  void initFuture() {
+    statusFuture = TflApi().getLineStatus(lineIds);
+  }
+
+  void reloadFuture()
+  {
+    initFuture();
+    setState(() {
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List>(
-        future: widget.statusFuture,
-        // a previously-obtained Future<String> or null
+        future: statusFuture,
         builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
-              return Text('Press button to start.');
             case ConnectionState.active:
             case ConnectionState.waiting:
-              snapshotLoaded = false;
-              return Text('Awaiting result...');
+              return Center(
+                child: CircularProgressIndicator()
+              );
             case ConnectionState.done:
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
@@ -47,7 +74,6 @@ class _StatusIndicatorState extends State<StatusIndicator> {
 
               if (!snapshotLoaded) {
                 final data = snapshot.data;
-
                 snapshot.data.forEach((item) {
                   items.add(Expandable(item));
                 });
