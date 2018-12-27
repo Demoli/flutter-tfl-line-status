@@ -30,7 +30,7 @@ class _StationDetailState extends State<StationDetail> {
     });
 
     return Container(
-        child: Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
+        child: ListView(shrinkWrap: true, children: <Widget>[
       FutureBuilder<List>(
           future: lineFuture,
           // a previously-obtained Future<String> or null
