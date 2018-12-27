@@ -96,7 +96,9 @@ class _StatusIndicatorState extends State<StatusIndicator> {
                 expandable.isExpanded = !expandable.isExpanded;
                 setState(() {});
               },
-              child: Row(children: <Widget>[
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
                 Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Text(
