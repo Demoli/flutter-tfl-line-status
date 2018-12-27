@@ -55,7 +55,6 @@ class _StationDetailState extends State<StationDetail> {
                     .map((line) => line['id'])
                     .toSet()
                     .toList();
-
                 return Card(
                   child: Column(
                     children: <Widget>[

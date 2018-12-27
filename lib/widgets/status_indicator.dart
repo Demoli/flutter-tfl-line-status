@@ -45,7 +45,7 @@ class _StatusIndicatorState extends State<StatusIndicator> {
                 return Text('Error: ${snapshot.error}');
               }
 
-              if(!snapshotLoaded) {
+              if (!snapshotLoaded) {
                 final data = snapshot.data;
 
                 snapshot.data.forEach((item) {
@@ -74,23 +74,20 @@ class _StatusIndicatorState extends State<StatusIndicator> {
     if (item == null) {
       return null;
     }
-    final lineStatus = item['lineStatuses'][item['lineStatuses'].length - 1];
-
-    final severity = lineStatus['statusSeverityDescription'];
 
     int bgColor = 0XFF76FF03;
-    int txtColor = 0XFF000000;
+    bool showWarning = false;
 
-    switch (severity) {
-      case "Minor Delays":
-      case 'Severe Delays':
-      case 'Suspended':
-      case 'Part Suspended':
-      case 'Part Closure':
+    final lineStatuses = item['lineStatuses'];
+    List reasons = [];
+
+    lineStatuses.forEach((status) {
+      if (status['statusSeverityDescription'] != 'Good Service') {
         bgColor = 0XFFB71C1C;
-        txtColor = 0XFFFFFFFF;
-        break;
-    }
+        showWarning = true;
+        reasons.add(status['reason']);
+      }
+    });
 
     return ExpansionPanel(
         headerBuilder: (BuildContext context, bool isExpanded) {
@@ -99,24 +96,33 @@ class _StatusIndicatorState extends State<StatusIndicator> {
                 expandable.isExpanded = !expandable.isExpanded;
                 setState(() {});
               },
-              child: Text(item['name']));
+              child: Row(children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    item['name'],
+                    style: TextStyle(fontSize: 25),
+                  ),
+                ),
+                (showWarning
+                    ? Icon(
+                        Icons.warning,
+                        color: Color(bgColor),
+                      )
+                    : Icon(
+                        Icons.check,
+                        color: Color(bgColor),
+                      ))
+              ]));
         },
         isExpanded: expandable.isExpanded,
         body: Column(
           children: <Widget>[
             Container(
-              decoration: BoxDecoration(color: Color(bgColor)),
               padding: EdgeInsets.all(10.0),
               margin: EdgeInsets.all(5.0),
               child: Column(
-                children: <Widget>[
-                  Text(item['name'],
-                      style: TextStyle(color: Color(txtColor), fontSize: 20)),
-                  Text(severity,
-                      style: TextStyle(color: Color(txtColor), fontSize: 25)),
-                  Text(lineStatus['reason'] ?? "",
-                      style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 15))
-                ],
+                children: <Widget>[Text(reasons.join('\n\n'))],
               ),
             )
           ],
