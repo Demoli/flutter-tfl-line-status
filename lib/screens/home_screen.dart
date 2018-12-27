@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tfl/widgets/global_actions.dart';
 import 'package:tfl/widgets/home_station.dart';
+import 'package:tfl/widgets/nearest_station.dart';
+import 'package:tfl/widgets/station_search.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -17,6 +19,13 @@ class _HomeScreenState extends State<HomeScreen> {
           // the App.build method, and use it to set our appbar title.
           title: Text("Home Station"),
         ),
-        body: HomeStation());
+        body: ListView(
+          shrinkWrap: true,
+          children: <Widget>[
+            StationSearch(),
+            HomeStation(),
+            NearestStation(),
+          ],
+        ));
   }
 }

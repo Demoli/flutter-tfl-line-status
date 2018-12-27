@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:tfl/models/home_station.dart';
 import 'dart:async';
 
 import 'package:tfl/tfl/api.dart';
@@ -8,7 +9,14 @@ import 'package:tfl/widgets/station_detail.dart';
 class NearestStation extends StatefulWidget {
   Future<Position> locationFuture;
 
+  Map homeStation;
+
   NearestStation() {
+
+    HomeStation().get().then((onValue) {
+      homeStation = onValue;
+    });
+
     locationFuture =
         Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
@@ -55,6 +63,10 @@ class _NearestStationState extends State<NearestStation> {
                         final stopPoints = snapshot.data;
 
                         final closest = stopPoints.removeAt(0);
+
+                        if(widget.homeStation != null && closest['id'] == widget.homeStation['id']) {
+                          return Text('');
+                        }
 
                         return StationDetail(closest);
                     }
