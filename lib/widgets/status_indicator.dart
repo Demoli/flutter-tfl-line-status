@@ -150,7 +150,7 @@ class _StatusIndicatorState extends State<StatusIndicator> {
               padding: EdgeInsets.all(10.0),
               margin: EdgeInsets.all(5.0),
               child: Column(
-                children: <Widget>[Text(reasons.join('\n\n'))],
+                children: <Widget>[Text(reasons.length > 0 ? reasons.join('\n\n') : 'Good Service')],
               ),
             )
           ],

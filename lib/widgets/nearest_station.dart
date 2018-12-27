@@ -27,7 +27,7 @@ class _NearestStationState extends State<NearestStation> {
             case ConnectionState.none:
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return Text('Getting location...');
+              return Center(child: CircularProgressIndicator());
             case ConnectionState.done:
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
@@ -46,7 +46,7 @@ class _NearestStationState extends State<NearestStation> {
                       case ConnectionState.none:
                       case ConnectionState.active:
                       case ConnectionState.waiting:
-                        return Text('Finding closest station');
+                        return Center(child: CircularProgressIndicator());
                       case ConnectionState.done:
                         if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
