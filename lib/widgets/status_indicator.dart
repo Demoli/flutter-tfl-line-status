@@ -15,8 +15,17 @@ class StatusIndicator extends StatefulWidget {
   _StatusIndicatorState createState() => _StatusIndicatorState();
 }
 
+class Expandable {
+  bool isExpanded = false;
+  Map data;
+
+  Expandable(this.data);
+}
+
 class _StatusIndicatorState extends State<StatusIndicator> {
-  List items;
+  List items = [];
+
+  bool snapshotLoaded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -29,49 +38,42 @@ class _StatusIndicatorState extends State<StatusIndicator> {
               return Text('Press button to start.');
             case ConnectionState.active:
             case ConnectionState.waiting:
+              snapshotLoaded = false;
               return Text('Awaiting result...');
             case ConnectionState.done:
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               }
 
-              final data = snapshot.data;
-              items = data;
+              if(!snapshotLoaded) {
+                final data = snapshot.data;
 
-              data.forEach((item) {
-                if (!item.containsKey('isExpanded')) {
-                  item['isExpanded'] = false;
-                }
-              });
+                snapshot.data.forEach((item) {
+                  items.add(Expandable(item));
+                });
+                snapshotLoaded = true;
+              }
 
               return ExpansionPanelList(
                 expansionCallback: (int index, bool isExpanded) {
                   setState(() {
-                    items[index]['isExpanded'] = !items[index]['isExpanded'];
+                    items[index].isExpanded = !items[index].isExpanded;
                   });
                 },
                 children: items.map((item) {
-                  return ExpansionPanel(
-                    headerBuilder: (BuildContext context, bool isExpanded) {
-                      return GestureDetector(
-                          onTap: () {
-                            item['isExpanded'] = !item['isExpanded'];
-                            setState(() {});
-                          },
-                          child: Text(item['name']));
-                    },
-                    isExpanded: item['isExpanded'],
-                    body: new Container(
-                      child: createListView(item),
-                    ),
-                  );
+                  return createListView(item);
                 }).toList(),
               );
           }
         });
   }
 
-  Widget createListView(Map item) {
+  ExpansionPanel createListView(Expandable expandable) {
+    final item = expandable.data;
+
+    if (item == null) {
+      return null;
+    }
     final lineStatus = item['lineStatuses'][item['lineStatuses'].length - 1];
 
     final severity = lineStatus['statusSeverityDescription'];
@@ -90,24 +92,34 @@ class _StatusIndicatorState extends State<StatusIndicator> {
         break;
     }
 
-    return Column(
-      children: <Widget>[
-        Container(
-          decoration: BoxDecoration(color: Color(bgColor)),
-          padding: EdgeInsets.all(10.0),
-          margin: EdgeInsets.all(5.0),
-          child: Column(
-            children: <Widget>[
-              Text(item['name'],
-                  style: TextStyle(color: Color(txtColor), fontSize: 20)),
-              Text(severity,
-                  style: TextStyle(color: Color(txtColor), fontSize: 25)),
-              Text(lineStatus['reason'] ?? "",
-                  style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 15))
-            ],
-          ),
-        )
-      ],
-    );
+    return ExpansionPanel(
+        headerBuilder: (BuildContext context, bool isExpanded) {
+          return GestureDetector(
+              onTap: () {
+                expandable.isExpanded = !expandable.isExpanded;
+                setState(() {});
+              },
+              child: Text(item['name']));
+        },
+        isExpanded: expandable.isExpanded,
+        body: Column(
+          children: <Widget>[
+            Container(
+              decoration: BoxDecoration(color: Color(bgColor)),
+              padding: EdgeInsets.all(10.0),
+              margin: EdgeInsets.all(5.0),
+              child: Column(
+                children: <Widget>[
+                  Text(item['name'],
+                      style: TextStyle(color: Color(txtColor), fontSize: 20)),
+                  Text(severity,
+                      style: TextStyle(color: Color(txtColor), fontSize: 25)),
+                  Text(lineStatus['reason'] ?? "",
+                      style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 15))
+                ],
+              ),
+            )
+          ],
+        ));
   }
 }

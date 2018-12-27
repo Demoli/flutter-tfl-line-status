@@ -17,15 +17,13 @@ class StationDetail extends StatefulWidget {
 class _StationDetailState extends State<StationDetail> {
   bool isHomeStation = false;
 
-
-
   @override
   Widget build(BuildContext context) {
     final lineFuture = TflApi().getLinesByStopPoint(widget.stopPoint['id']);
 
     HomeStation().get().then((onValue) {
       if (onValue != null) {
-        if(onValue['id'] == widget.stopPoint['id']) {
+        if (onValue['id'] == widget.stopPoint['id']) {
           isHomeStation = true;
         }
       }
@@ -66,29 +64,21 @@ class _StationDetailState extends State<StationDetail> {
                         title: Text(widget.stopPoint['name'] ??
                             widget.stopPoint['commonName']),
                       ),
-//                      buildHomeButton(context),
+                      buildHomeButton(context),
                       StatusIndicator(lineIds)
                     ],
                   ),
-                );
-
-                return Column(
-                  children: <Widget>[
-                    Text(widget.stopPoint['name'] ??
-                        widget.stopPoint['commonName']),
-                    buildHomeButton(context),
-                    StatusIndicator(lineIds)
-                  ],
                 );
             }
           })
     ]));
   }
 
-  Widget buildHomeButton(BuildContext context) {
-    if (this.isHomeStation) {
-      return Text("This is your home station");
+  buildHomeButton(BuildContext context) {
+    if (isHomeStation) {
+      return Text('');
     }
+
     return RaisedButton(
         child: Text('Set as home station'),
         onPressed: () {
