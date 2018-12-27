@@ -11,8 +11,8 @@ class TflApi {
 
   final String appKey = 'fbe79c3976b5e59d5bea01312932bcab';
 
-  Future<List> getLineStatus(List stationIds) async {
-    final implodedStations = stationIds.join(",");
+  Future<List> getLineStatus(List lineIds) async {
+    final implodedStations = lineIds.join(",");
     final response = await this._getRequest('/line/$implodedStations/status');
 
     return jsonDecode(response.body);

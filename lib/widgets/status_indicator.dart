@@ -3,12 +3,12 @@ import 'package:tfl/tfl/api.dart';
 
 class StatusIndicator extends StatefulWidget {
   Future<List> statusFuture;
-  List stationIds;
+  List lineIds;
 
-  StatusIndicator(List stationIds) {
-    statusFuture = TflApi().getLineStatus(stationIds);
+  StatusIndicator(List lineIds) {
+    statusFuture = TflApi().getLineStatus(lineIds);
 
-    this.stationIds = stationIds;
+    this.lineIds = lineIds;
   }
 
   @override
