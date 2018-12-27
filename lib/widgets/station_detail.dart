@@ -23,7 +23,7 @@ class _StationDetailState extends State<StationDetail> {
   Widget build(BuildContext context) {
     final lineFuture = TflApi().getLinesByStopPoint(widget.stopPoint['id']);
 
-    final homeStationFuture = HomeStation().get().then((onValue) {
+    HomeStation().get().then((onValue) {
       if (onValue != null) {
         if(onValue['id'] == widget.stopPoint['id']) {
           isHomeStation = true;
@@ -57,6 +57,20 @@ class _StationDetailState extends State<StationDetail> {
                     .map((line) => line['id'])
                     .toSet()
                     .toList();
+
+                return Card(
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        leading: isHomeStation ? Icon(Icons.home) : null,
+                        title: Text(widget.stopPoint['name'] ??
+                            widget.stopPoint['commonName']),
+                      ),
+//                      buildHomeButton(context),
+                      StatusIndicator(lineIds)
+                    ],
+                  ),
+                );
 
                 return Column(
                   children: <Widget>[

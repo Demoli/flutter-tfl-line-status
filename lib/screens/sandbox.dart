@@ -38,34 +38,67 @@ class _SandboxState extends State<Sandbox> {
 
   @override
   Widget build(BuildContext context) {
-    return new ListView(
-      children: [
-        ExpansionPanelList(
-          expansionCallback: (int index, bool isExpanded) {
-            setState(() {
-              _items[index].isExpanded = !_items[index].isExpanded;
-            });
-          },
-          children: _items.map((MyItem item) {
-            return new ExpansionPanel(
-              headerBuilder: (BuildContext context, bool isExpanded) {
-                return GestureDetector(onTap: () {
-                  item.isExpanded = !item.isExpanded;
-                  setState(() {
-
-                  });
-                },
-                    child: Text(item.header)
-                );
-              },
-              isExpanded: item.isExpanded,
-              body: new Container(
-                child: new Text("body"),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
+    return Card(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const ListTile(
+            leading: Icon(Icons.album),
+            title: Text('The Enchanted Nightingale'),
+            subtitle: Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
+          ),
+          ButtonTheme.bar(
+            // make buttons use the appropriate styles for cards
+            child: ButtonBar(
+              children: <Widget>[
+                FlatButton(
+                  child: const Text('BUY TICKETS'),
+                  onPressed: () {
+                    /* ... */
+                  },
+                ),
+                FlatButton(
+                  child: const Text('LISTEN'),
+                  onPressed: () {
+                    /* ... */
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
+//  Widget build(BuildContext context) {
+//    return new ListView(
+//      children: [
+//        ExpansionPanelList(
+//          expansionCallback: (int index, bool isExpanded) {
+//            setState(() {
+//              _items[index].isExpanded = !_items[index].isExpanded;
+//            });
+//          },
+//          children: _items.map((MyItem item) {
+//            return new ExpansionPanel(
+//              headerBuilder: (BuildContext context, bool isExpanded) {
+//                return GestureDetector(onTap: () {
+//                  item.isExpanded = !item.isExpanded;
+//                  setState(() {
+//
+//                  });
+//                },
+//                    child: Text(item.header)
+//                );
+//              },
+//              isExpanded: item.isExpanded,
+//              body: new Container(
+//                child: new Text("body"),
+//              ),
+//            );
+//          }).toList(),
+//        ),
+//      ],
+//    );
+//  }
 }
