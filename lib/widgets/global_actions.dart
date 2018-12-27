@@ -11,8 +11,8 @@ GlobalActions(context) {
     IconButton(
         icon: Icon(Icons.search),
         onPressed: () => Navigator.pushNamed(context, '/search')),
-    IconButton(
-        icon: Icon(Icons.developer_mode),
-        onPressed: () => Navigator.pushNamed(context, '/sandbox')),
+//    IconButton(
+//        icon: Icon(Icons.developer_mode),
+//        onPressed: () => Navigator.pushNamed(context, '/sandbox')),
   ];
 }

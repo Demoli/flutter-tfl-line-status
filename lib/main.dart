@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomeScreen(),
         '/nearest': (context) => NearestStationScreen(),
         '/search': (context) => StationSearch(),
-        '/sandbox': (context) => SandboxScreen()
+//        '/sandbox': (context) => SandboxScreen()
       },
       theme: ThemeData(
         primarySwatch: Colors.blue,
