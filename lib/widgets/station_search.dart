@@ -17,7 +17,7 @@ class _StationSearchState extends State<StationSearch> {
           children: <Widget>[
             TypeAheadField(
               textFieldConfiguration: TextFieldConfiguration(
-                autofocus: true,
+                autofocus: false,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(), hintText: 'Station Name'),
               ),

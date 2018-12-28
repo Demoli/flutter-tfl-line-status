@@ -7,29 +7,33 @@ import 'package:tfl/tfl/api.dart';
 import 'package:tfl/widgets/station_detail.dart';
 
 class NearestStation extends StatefulWidget {
-  Future<Position> locationFuture;
-
-  Map homeStation;
-
-  NearestStation() {
-
-    HomeStation().get().then((onValue) {
-      homeStation = onValue;
-    });
-
-    locationFuture =
-        Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-  }
-
   @override
   _NearestStationState createState() => _NearestStationState();
 }
 
 class _NearestStationState extends State<NearestStation> {
+
+  Geolocator geolocator;
+
+  Future<Position> locationFuture;
+
+  Map homeStation;
+
+  _NearestStationState() {
+
+    HomeStation().get().then((onValue) {
+      homeStation = onValue;
+    });
+
+    geolocator = Geolocator();
+
+    locationFuture = geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Position>(
-        future: widget.locationFuture,
+        future: locationFuture,
         builder: (BuildContext context, AsyncSnapshot<Position> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -64,7 +68,7 @@ class _NearestStationState extends State<NearestStation> {
 
                         final closest = stopPoints.removeAt(0);
 
-                        if(widget.homeStation != null && closest['id'] == widget.homeStation['id']) {
+                        if(homeStation != null && closest['id'] == homeStation['id']) {
                           return Text('');
                         }
 
