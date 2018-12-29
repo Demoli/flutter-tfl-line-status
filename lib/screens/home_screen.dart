@@ -14,10 +14,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          actions: GlobalActions(context),
           // Here we take the value from the HomeScreen object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: Text("Home Station"),
+          title: Text("Home and Nearest Stations"),
         ),
         body: ListView(
           shrinkWrap: true,
