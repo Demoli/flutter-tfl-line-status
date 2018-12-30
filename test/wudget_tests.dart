@@ -23,28 +23,85 @@ void main() {
     return jsonDecode(new File(filePath).readAsStringSync());
   }
 
-  testWidgets('Get good line status', (WidgetTester tester) async {
-    await tester.runAsync(() async {
-      // mock the API
-      final mockApi = MockApi();
+  group('Status Indicator', () {
+    testWidgets('Good service', (WidgetTester tester) async {
+      await tester.runAsync(() async {
+        // mock the API
+        final mockApi = MockApi();
 
-      var response = loadFixture('test/fixtures/line_status_good_service.json');
+        var response =
+            loadFixture('test/fixtures/line_status_good_service.json');
 
-      when(mockApi.getLineStatus(['district']))
-          .thenAnswer((_) async => response);
+        when(mockApi.getLineStatus(['district']))
+            .thenAnswer((_) async => response);
 
-      // test the widget
-      await tester.pumpWidget(MaterialApp(
-          home: Scaffold(
-              body: ListView(
-        children: <Widget>[
-          StatusIndicator(['district'], api: mockApi)
-        ],
-      ))));
+        // test the widget
+        await tester.pumpWidget(MaterialApp(
+            home: Scaffold(
+                body: ListView(
+          children: <Widget>[
+            StatusIndicator(['district'], api: mockApi)
+          ],
+        ))));
 
-      await tester.pumpAndSettle();
-      expect(find.byIcon(Icons.check), findsOneWidget);
-      expect(find.text('Good Service'), findsOneWidget);
+        await tester.pumpAndSettle();
+        expect(find.byIcon(Icons.check), findsOneWidget);
+        expect(find.text('Good Service'), findsOneWidget);
+      });
+    });
+
+    testWidgets('Delays', (WidgetTester tester) async {
+      await tester.runAsync(() async {
+        // mock the API
+        final mockApi = MockApi();
+
+        var response =
+            loadFixture('test/fixtures/line_status_minor_delays.json');
+
+        when(mockApi.getLineStatus(['district']))
+            .thenAnswer((_) async => response);
+
+        // test the widget
+        await tester.pumpWidget(MaterialApp(
+            home: Scaffold(
+                body: ListView(
+          children: <Widget>[
+            StatusIndicator(['district'], api: mockApi)
+          ],
+        ))));
+
+        await tester.pumpAndSettle();
+        expect(find.byIcon(Icons.warning), findsOneWidget);
+        expect(find.text('Signal failure'), findsOneWidget);
+      });
     });
   });
+
+//  group('Station Details', () {
+//    testWidgets('Station', (WidgetTester tester) async {
+//      await tester.runAsync(() async {
+//        // mock the API
+//        final mockApi = MockApi();
+//
+//        var response =
+//        loadFixture('test/fixtures/line_status_good_service.json');
+//
+//        when(mockApi.getLineStatus(['district']))
+//            .thenAnswer((_) async => response);
+//
+//        // test the widget
+//        await tester.pumpWidget(MaterialApp(
+//            home: Scaffold(
+//                body: ListView(
+//                  children: <Widget>[
+//                    StatusIndicator(['district'], api: mockApi)
+//                  ],
+//                ))));
+//
+//        await tester.pumpAndSettle();
+//        expect(find.byIcon(Icons.check), findsOneWidget);
+//        expect(find.text('Good Service'), findsOneWidget);
+//      });
+//    });
+//  });
 }
