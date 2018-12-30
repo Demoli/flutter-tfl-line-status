@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tfl/widgets/global_actions.dart';
 import 'package:tfl/widgets/home_station.dart';
 import 'package:tfl/widgets/nearest_station.dart';
 import 'package:tfl/widgets/station_search.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -21,9 +21,9 @@ class _HomeScreenState extends State<HomeScreen> {
         body: ListView(
           shrinkWrap: true,
           children: <Widget>[
-            StationSearch(),
+            Injector.getInjector().get<StationSearch>(),
             HomeStation(),
-            NearestStation(),
+            Injector.getInjector().get<NearestStation>(),
           ],
         ));
   }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tfl/screens/home_screen.dart';
-import 'package:tfl/screens/nearest_station.dart';
-import 'package:tfl/screens/sandbox.dart';
-import 'package:tfl/screens/station_search.dart';
+import 'package:tfl_di/tfl_di.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  configureInjector();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -15,8 +16,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => HomeScreen(),
-        '/nearest': (context) => NearestStationScreen(),
-        '/search': (context) => StationSearch(),
+//        '/nearest': (context) => NearestStationScreen(),
+//        '/search': (context) => StationSearch(),
 //        '/sandbox': (context) => SandboxScreen()
       },
       theme: ThemeData(

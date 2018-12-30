@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tfl/widgets/nearest_station.dart';
 import 'package:tfl/models/home_station.dart' as HomeStationModel;
 import 'package:tfl/widgets/station_detail.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
+
 
 class HomeStation extends StatefulWidget {
   @override
@@ -30,7 +31,7 @@ class _HomeStationState extends State<HomeStation> {
               final station = snapshot.data;
 
               if (station == null) {
-                return NearestStation();
+                return Injector.getInjector().get<NearestStation>();
               }
 
               return StationDetail(station);

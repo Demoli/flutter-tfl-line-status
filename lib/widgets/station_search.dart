@@ -4,11 +4,19 @@ import 'package:tfl/screens/station_detail_screen.dart';
 import 'package:tfl/tfl/api.dart';
 
 class StationSearch extends StatefulWidget {
+  TflApi api;
+
+  StationSearch(this.api);
+
   @override
-  _StationSearchState createState() => _StationSearchState();
+  _StationSearchState createState() => _StationSearchState(this.api);
 }
 
 class _StationSearchState extends State<StationSearch> {
+  TflApi api;
+
+  _StationSearchState(this.api);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,8 +30,7 @@ class _StationSearchState extends State<StationSearch> {
                     border: OutlineInputBorder(), hintText: 'Station Name'),
               ),
               suggestionsCallback: (pattern) async {
-                final stations =
-                await TflApi().searchStationByName(pattern);
+                final stations = await api.searchStationByName(pattern);
 
                 return stations;
               },
