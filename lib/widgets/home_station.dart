@@ -30,10 +30,6 @@ class _HomeStationState extends State<HomeStation> {
               final station = snapshot.data;
 
               if (station == null) {
-//                final snackBar = SnackBar(
-//                    content:
-//                        Text('No home station set, getting closest station'));
-//                Scaffold.of(context).showSnackBar(snackBar);
                 return NearestStation();
               }
 

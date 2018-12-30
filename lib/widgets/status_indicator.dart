@@ -6,12 +6,15 @@ import 'package:tfl/tfl/api.dart';
 class StatusIndicator extends StatefulWidget {
   List lineIds;
 
-  StatusIndicator(List lineIds) {
+  TflApi api;
+
+  StatusIndicator(List lineIds, {TflApi api}) {
     this.lineIds = lineIds;
+    this.api = api;
   }
 
   @override
-  _StatusIndicatorState createState() => _StatusIndicatorState(this.lineIds);
+  _StatusIndicatorState createState() => _StatusIndicatorState(this.lineIds, (this.api ?? TflApi()));
 }
 
 class Expandable {
@@ -24,6 +27,8 @@ class Expandable {
 class _StatusIndicatorState extends State<StatusIndicator> {
   final lineIds;
 
+  TflApi api;
+
   List items = [];
 
   bool snapshotLoaded = false;
@@ -32,11 +37,10 @@ class _StatusIndicatorState extends State<StatusIndicator> {
 
   static Future<List> statusFuture;
 
-
-  _StatusIndicatorState(this.lineIds) {
+  _StatusIndicatorState(this.lineIds, this.api) {
     initFuture();
 
-    if(refresh == null) {
+    if (refresh == null) {
       refresh = new Timer.periodic(Duration(minutes: 30), (Timer t) {
         reloadFuture();
       });
@@ -44,15 +48,12 @@ class _StatusIndicatorState extends State<StatusIndicator> {
   }
 
   void initFuture() {
-    statusFuture = TflApi().getLineStatus(lineIds);
+    statusFuture = api.getLineStatus(lineIds);
   }
 
-  void reloadFuture()
-  {
+  void reloadFuture() {
     initFuture();
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
@@ -64,9 +65,7 @@ class _StatusIndicatorState extends State<StatusIndicator> {
             case ConnectionState.none:
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator()
-              );
+              return Center(child: CircularProgressIndicator());
             case ConnectionState.done:
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
@@ -123,25 +122,25 @@ class _StatusIndicatorState extends State<StatusIndicator> {
                 setState(() {});
               },
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    item['name'],
-                    style: TextStyle(fontSize: 25),
-                  ),
-                ),
-                (showWarning
-                    ? Icon(
-                        Icons.warning,
-                        color: Color(bgColor),
-                      )
-                    : Icon(
-                        Icons.check,
-                        color: Color(bgColor),
-                      ))
-              ]));
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Text(
+                        item['name'],
+                        style: TextStyle(fontSize: 25),
+                      ),
+                    ),
+                    (showWarning
+                        ? Icon(
+                            Icons.warning,
+                            color: Color(bgColor),
+                          )
+                        : Icon(
+                            Icons.check,
+                            color: Color(bgColor),
+                          ))
+                  ]));
         },
         isExpanded: expandable.isExpanded,
         body: Column(
@@ -150,7 +149,11 @@ class _StatusIndicatorState extends State<StatusIndicator> {
               padding: EdgeInsets.all(10.0),
               margin: EdgeInsets.all(5.0),
               child: Column(
-                children: <Widget>[Text(reasons.length > 0 ? reasons.join('\n\n') : 'Good Service')],
+                children: <Widget>[
+                  Text(reasons.length > 0
+                      ? reasons.join('\n\n')
+                      : 'Good Service')
+                ],
               ),
             )
           ],
