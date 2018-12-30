@@ -5,16 +5,17 @@ import 'dart:async';
 
 import 'package:tfl/tfl/api.dart';
 import 'package:tfl/widgets/station_detail.dart';
-import 'package:tfl_di/tfl_di.dart';
 
 class NearestStation extends StatefulWidget {
 
   final TflApi api;
 
-  @override
-  _NearestStationState createState() => _NearestStationState(this.api);
+  final Geolocator geolocator;
 
-  NearestStation(this.api);
+  @override
+  _NearestStationState createState() => _NearestStationState(this.api, this.geolocator);
+
+  NearestStation(this.api, this.geolocator);
 }
 
 class _NearestStationState extends State<NearestStation> {
@@ -27,13 +28,11 @@ class _NearestStationState extends State<NearestStation> {
 
   Map homeStation;
 
-  _NearestStationState(this.api) {
+  _NearestStationState(this.api, this.geolocator) {
 
     HomeStation().get().then((onValue) {
       homeStation = onValue;
     });
-
-    geolocator = Geolocator();
 
     locationFuture = geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
