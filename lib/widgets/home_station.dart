@@ -7,7 +7,7 @@ import 'package:flutter_simple_dependency_injection/injector.dart';
 
 class HomeStation extends StatefulWidget {
 
-  HomeStationModel homeStationModel;
+  final HomeStationModel homeStationModel;
 
   HomeStation(this.homeStationModel);
 
@@ -40,7 +40,6 @@ class _HomeStationState extends State<HomeStation> {
               }
 
               return Injector.getInjector().get<StationDetail>(additionalParameters: {'stopPoint':station});
-//              return StationDetail(station);
           }
         });
   }

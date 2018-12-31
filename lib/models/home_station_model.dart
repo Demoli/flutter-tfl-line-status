@@ -12,7 +12,7 @@ class HomeStationModel {
           station = jsonDecode(stationString);
         }
       });
-    } catch (exception, stacktrace) {
+    } catch (exception) {
       throw exception;
     }
 

@@ -4,7 +4,7 @@ import 'package:tfl/screens/station_detail_screen.dart';
 import 'package:tfl/tfl/api.dart';
 
 class StationSearch extends StatefulWidget {
-  TflApi api;
+  final TflApi api;
 
   StationSearch(this.api);
 

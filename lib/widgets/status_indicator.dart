@@ -4,14 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:tfl/tfl/api.dart';
 
 class StatusIndicator extends StatefulWidget {
-  List lineIds;
+  final List lineIds;
 
-  TflApi api;
+  final TflApi api;
 
-  StatusIndicator(List lineIds, {TflApi api}) {
-    this.lineIds = lineIds;
-    this.api = api;
-  }
+  StatusIndicator(this.lineIds, {this.api});
 
   @override
   _StatusIndicatorState createState() => _StatusIndicatorState(this.lineIds, (this.api ?? TflApi()));
@@ -72,7 +69,6 @@ class _StatusIndicatorState extends State<StatusIndicator> {
               }
 
               if (!snapshotLoaded) {
-                final data = snapshot.data;
                 snapshot.data.forEach((item) {
                   items.add(Expandable(item));
                 });

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
-import 'package:tfl/widgets/global_actions.dart';
 import 'package:tfl/widgets/station_detail.dart';
-import 'package:tfl/models/home_station_model.dart';
 
 
 class StationDetailScreen extends StatefulWidget {
