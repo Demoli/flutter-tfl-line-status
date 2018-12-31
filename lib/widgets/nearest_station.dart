@@ -26,13 +26,37 @@ class _NearestStationState extends State<NearestStation> {
 
   Geolocator geolocator;
 
-  Future<Position> locationFuture;
+  bool initialPositionLocked = false;
+
+  Stream<Position> locationFuture;
+
+  Stream<Position> locationUpdate;
+
+  Position lastPosition;
 
   final HomeStationModel homeStationModel;
 
   Map homeStation;
 
-  _NearestStationState(this.api, this.geolocator, this.homeStationModel);
+  _NearestStationState(this.api, this.geolocator, this.homeStationModel) {
+    locationUpdate = geolocator.getPositionStream(new LocationOptions(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 20));
+  }
+
+  @override
+  void initState() {
+    locationUpdate.listen((position) {
+      final samePosition = lastPosition != null &&
+          (position.latitude == lastPosition.latitude &&
+              position.longitude == lastPosition.longitude);
+
+      if (initialPositionLocked && !samePosition) {
+        lastPosition = position;
+        setState(() {});
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +64,12 @@ class _NearestStationState extends State<NearestStation> {
       homeStation = onValue;
     });
 
-    locationFuture =
-        geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    locationFuture = geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .asStream();
 
-    return FutureBuilder<Position>(
-        future: locationFuture,
+    return StreamBuilder<Position>(
+        stream: locationFuture,
         builder: (BuildContext context, AsyncSnapshot<Position> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -56,40 +81,44 @@ class _NearestStationState extends State<NearestStation> {
                 return Text('Error: ${snapshot.error}');
               }
 
+              initialPositionLocked = true;
+
               final position = snapshot.data;
 
-              final stopPointFuture = api.getStopPointsByLocation(
-                  position.latitude, position.longitude);
+              return renderStopPoints(position);
+          }
+        });
+  }
 
-              return FutureBuilder<List>(
-                  future: stopPointFuture,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<List> snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.none:
-                      case ConnectionState.active:
-                      case ConnectionState.waiting:
-                        return Center(child: CircularProgressIndicator());
-                      case ConnectionState.done:
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        }
+  Widget renderStopPoints(Position position) {
+    final stopPointFuture =
+        api.getStopPointsByLocation(position.latitude, position.longitude);
 
-                        final stopPoints = snapshot.data;
+    return FutureBuilder<List>(
+        future: stopPointFuture,
+        builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.active:
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+            case ConnectionState.done:
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
 
-                        final closest = stopPoints.removeAt(0);
+              final stopPoints = snapshot.data;
 
-                        if (homeStation != null &&
-                            closest['id'] == homeStation['id']) {
-                          return Text('');
-                        }
+              final closest = stopPoints.removeAt(0);
 
-                        return Injector.getInjector().get<StationDetail>(
-                            additionalParameters: {
-                              'stopPoint': closest,
-                              'homeStationModel': homeStationModel
-                            });
-                    }
+              if (homeStation != null && closest['id'] == homeStation['id']) {
+                return Text('');
+              }
+
+              return Injector.getInjector().get<StationDetail>(
+                  additionalParameters: {
+                    'stopPoint': closest,
+                    'homeStationModel': homeStationModel
                   });
           }
         });
