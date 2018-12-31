@@ -8,7 +8,6 @@ import 'package:tfl/tfl/api.dart';
 import 'package:tfl/widgets/station_detail.dart';
 
 class NearestStation extends StatefulWidget {
-
   final TflApi api;
 
   final Geolocator geolocator;
@@ -16,13 +15,13 @@ class NearestStation extends StatefulWidget {
   final HomeStationModel homeStationModel;
 
   @override
-  _NearestStationState createState() => _NearestStationState(this.api, this.geolocator, this.homeStationModel);
+  _NearestStationState createState() =>
+      _NearestStationState(this.api, this.geolocator, this.homeStationModel);
 
   NearestStation(this.api, this.geolocator, this.homeStationModel);
 }
 
 class _NearestStationState extends State<NearestStation> {
-
   TflApi api;
 
   Geolocator geolocator;
@@ -33,17 +32,17 @@ class _NearestStationState extends State<NearestStation> {
 
   Map homeStation;
 
-  _NearestStationState(this.api, this.geolocator, this.homeStationModel) {
+  _NearestStationState(this.api, this.geolocator, this.homeStationModel);
 
+  @override
+  Widget build(BuildContext context) {
     homeStationModel.get().then((onValue) {
       homeStation = onValue;
     });
 
-    locationFuture = geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-  }
+    locationFuture =
+        geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
-  @override
-  Widget build(BuildContext context) {
     return FutureBuilder<Position>(
         future: locationFuture,
         builder: (BuildContext context, AsyncSnapshot<Position> snapshot) {
@@ -80,12 +79,16 @@ class _NearestStationState extends State<NearestStation> {
 
                         final closest = stopPoints.removeAt(0);
 
-                        if(homeStation != null && closest['id'] == homeStation['id']) {
+                        if (homeStation != null &&
+                            closest['id'] == homeStation['id']) {
                           return Text('');
                         }
 
-                        return Injector.getInjector().get<StationDetail>(additionalParameters: {'stopPoint':closest, 'homeStationModel': homeStationModel});
-//                        return StationDetail(closest);
+                        return Injector.getInjector().get<StationDetail>(
+                            additionalParameters: {
+                              'stopPoint': closest,
+                              'homeStationModel': homeStationModel
+                            });
                     }
                   });
           }

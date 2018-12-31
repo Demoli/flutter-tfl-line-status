@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Text("Home and Nearest Stations"),
         ),
         body: ListView(
+          padding: EdgeInsets.all(20.0),
           shrinkWrap: true,
           children: <Widget>[
             Injector.getInjector().get<StationSearch>(),

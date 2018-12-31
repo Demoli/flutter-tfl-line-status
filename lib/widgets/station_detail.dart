@@ -111,6 +111,10 @@ class _StationDetailState extends State<StationDetail> {
 
           final snackBar = SnackBar(content: Text('Station saved'));
           Scaffold.of(context).showSnackBar(snackBar);
+
+          setState(() {
+
+          });
         });
   }
 }
