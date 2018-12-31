@@ -8,14 +8,11 @@ import 'dart:convert';
 import 'package:tfl/tfl/api.dart';
 import 'package:tfl/widgets/nearest_station.dart';
 import 'package:tfl/widgets/status_indicator.dart';
-import 'package:tfl/models/home_station_model.dart';
 import 'package:tfl_di/tfl_di.dart';
 
 // Create a MockClient using the Mock class provided by the Mockito package.
 // We will create new instances of this class in each test.
 class MockApi extends Mock implements TflApi {}
-
-class MockHomeStationModel extends Mock implements HomeStationModel {}
 
 class MockGeoLocator extends Mock implements Geolocator {}
 
@@ -115,17 +112,12 @@ void main() {
                 desiredAccuracy: LocationAccuracy.high))
             .thenAnswer((_) async => mockPosition);
 
-        final mockHomeStationModel = new MockHomeStationModel();
-
-        when(mockHomeStationModel.get()).thenAnswer(
-            (_) async => loadFixture('test/fixtures/home_station.json'));
-
         // test the widget
         await tester.pumpWidget(MaterialApp(
             home: Scaffold(
                 body: ListView(
           children: <Widget>[
-            NearestStation(mockApi, mockGeoLocator, mockHomeStationModel)
+            NearestStation(mockApi, mockGeoLocator)
           ],
         ))));
 

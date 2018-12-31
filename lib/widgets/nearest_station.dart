@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:tfl/models/home_station_model.dart';
+import 'package:tfl/models/app_state.dart';
 import 'dart:async';
 
 import 'package:tfl/tfl/api.dart';
@@ -12,13 +13,11 @@ class NearestStation extends StatefulWidget {
 
   final Geolocator geolocator;
 
-  final HomeStationModel homeStationModel;
-
   @override
   _NearestStationState createState() =>
-      _NearestStationState(this.api, this.geolocator, this.homeStationModel);
+      _NearestStationState(this.api, this.geolocator);
 
-  NearestStation(this.api, this.geolocator, this.homeStationModel);
+  NearestStation(this.api, this.geolocator);
 }
 
 class _NearestStationState extends State<NearestStation> {
@@ -34,14 +33,11 @@ class _NearestStationState extends State<NearestStation> {
 
   Position lastPosition;
 
-  final HomeStationModel homeStationModel;
-
   Map homeStation;
 
-  _NearestStationState(this.api, this.geolocator, this.homeStationModel) {
+  _NearestStationState(this.api, this.geolocator) {
     locationUpdate = geolocator.getPositionStream(new LocationOptions(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 20));
+        accuracy: LocationAccuracy.high, distanceFilter: 20));
   }
 
   @override
@@ -60,10 +56,6 @@ class _NearestStationState extends State<NearestStation> {
 
   @override
   Widget build(BuildContext context) {
-    homeStationModel.get().then((onValue) {
-      homeStation = onValue;
-    });
-
     locationFuture = geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .asStream();
@@ -111,15 +103,20 @@ class _NearestStationState extends State<NearestStation> {
 
               final closest = stopPoints.removeAt(0);
 
-              if (homeStation != null && closest['id'] == homeStation['id']) {
-                return Text('');
-              }
+              return StoreConnector<AppState, Map>(
+                converter: (store) => store.state.homeStation,
+                builder: (context, homeStation) {
+                  final isHomeStation =
+                      homeStation != null && homeStation['id'] == closest['id'];
 
-              return Injector.getInjector().get<StationDetail>(
-                  additionalParameters: {
-                    'stopPoint': closest,
-                    'homeStationModel': homeStationModel
-                  });
+                  if (isHomeStation) {
+                    return Text('');
+                  }
+
+                  return Injector.getInjector().get<StationDetail>(
+                      additionalParameters: {'stopPoint': closest});
+                },
+              );
           }
         });
   }
