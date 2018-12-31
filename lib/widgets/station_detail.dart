@@ -1,27 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:tfl/models/home_station.dart';
+import 'package:tfl/models/home_station_model.dart';
 import 'package:tfl/tfl/api.dart';
 import 'package:tfl/widgets/status_indicator.dart';
 
 class StationDetail extends StatefulWidget {
   final stopPoint;
 
-  StationDetail(this.stopPoint);
+  final HomeStationModel homeStationModel;
+
+  StationDetail(this.stopPoint, this.homeStationModel);
 
   @override
-  _StationDetailState createState() => _StationDetailState();
+  _StationDetailState createState() =>
+      _StationDetailState(this.homeStationModel);
 }
 
 class _StationDetailState extends State<StationDetail> {
   bool isHomeStation = false;
 
+  final HomeStationModel homeStationModel;
+
   Future<Map> homeStationFuture;
+
+  _StationDetailState(this.homeStationModel);
 
   @override
   Widget build(BuildContext context) {
     final lineFuture = TflApi().getLinesByStopPoint(widget.stopPoint['id']);
 
-    homeStationFuture = HomeStation().get();
+    homeStationFuture = homeStationModel.get();
 
     homeStationFuture.then((onValue) {
       if (onValue != null) {
@@ -100,7 +107,7 @@ class _StationDetailState extends State<StationDetail> {
     return RaisedButton(
         child: Text('Set as home station'),
         onPressed: () {
-          HomeStation().set(widget.stopPoint);
+          homeStationModel.set(widget.stopPoint);
 
           final snackBar = SnackBar(content: Text('Station saved'));
           Scaffold.of(context).showSnackBar(snackBar);

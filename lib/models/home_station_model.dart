@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeStation {
+class HomeStationModel {
   Future<Map> get() async {
     Map station;
 

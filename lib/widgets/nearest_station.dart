@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:tfl/models/home_station.dart';
+import 'package:tfl/models/home_station_model.dart';
 import 'dart:async';
 
 import 'package:tfl/tfl/api.dart';
@@ -12,10 +13,12 @@ class NearestStation extends StatefulWidget {
 
   final Geolocator geolocator;
 
-  @override
-  _NearestStationState createState() => _NearestStationState(this.api, this.geolocator);
+  final HomeStationModel homeStationModel;
 
-  NearestStation(this.api, this.geolocator);
+  @override
+  _NearestStationState createState() => _NearestStationState(this.api, this.geolocator, this.homeStationModel);
+
+  NearestStation(this.api, this.geolocator, this.homeStationModel);
 }
 
 class _NearestStationState extends State<NearestStation> {
@@ -26,11 +29,13 @@ class _NearestStationState extends State<NearestStation> {
 
   Future<Position> locationFuture;
 
+  final HomeStationModel homeStationModel;
+
   Map homeStation;
 
-  _NearestStationState(this.api, this.geolocator) {
+  _NearestStationState(this.api, this.geolocator, this.homeStationModel) {
 
-    HomeStation().get().then((onValue) {
+    homeStationModel.get().then((onValue) {
       homeStation = onValue;
     });
 
@@ -79,7 +84,8 @@ class _NearestStationState extends State<NearestStation> {
                           return Text('');
                         }
 
-                        return StationDetail(closest);
+                        return Injector.getInjector().get<StationDetail>(additionalParameters: {'stopPoint':closest, 'homeStationModel': homeStationModel});
+//                        return StationDetail(closest);
                     }
                   });
           }

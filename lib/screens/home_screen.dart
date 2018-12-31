@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
           shrinkWrap: true,
           children: <Widget>[
             Injector.getInjector().get<StationSearch>(),
-            HomeStation(),
+            Injector.getInjector().get<HomeStation>(),
             Injector.getInjector().get<NearestStation>(),
           ],
         ));

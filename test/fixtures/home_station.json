@@ -1,0 +1,14 @@
+{
+  "$type": "Tfl.Api.Presentation.Entities.MatchedStop, Tfl.Api.Presentation.Entities",
+  "icsId": "1000209",
+  "topMostParentId": "940GZZLUSFS",
+  "modes": [
+    "tube",
+    "bus"
+  ],
+  "zone": "3",
+  "id": "940GZZLUSFS",
+  "name": "Southfields Underground Station",
+  "lat": 51.445073,
+  "lon": -0.206602
+}
