@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:tfl/helpers/snakcbar.dart';
 import 'package:tfl/models/app_state.dart';
 import 'package:tfl/redux/actions.dart';
 import 'package:tfl/tfl/api.dart';
@@ -17,8 +18,14 @@ class StationDetail extends StatefulWidget {
 class _StationDetailState extends State<StationDetail> {
   _StationDetailState();
 
+  BuildContext _snackBarContext;
+
+
+
   @override
   Widget build(BuildContext context) {
+    _snackBarContext = context;
+
     final lineFuture = TflApi().getLinesByStopPoint(widget.stopPoint['id']);
 
     return Container(
@@ -55,7 +62,7 @@ class _StationDetailState extends State<StationDetail> {
                       return Center(child: CircularProgressIndicator());
                     case ConnectionState.done:
                       if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
+                        return SnackBarHelper(SnackBar(content: Text('Failed to load line data, please try again')));
                       }
 
                       final lineIdRegex = new RegExp(r"^[a-zA-Z-]+$");

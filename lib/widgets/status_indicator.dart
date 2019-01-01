@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:tfl/helpers/snakcbar.dart';
 import 'package:tfl/tfl/api.dart';
 
 class StatusIndicator extends StatefulWidget {
@@ -11,7 +12,8 @@ class StatusIndicator extends StatefulWidget {
   StatusIndicator(this.lineIds, {this.api});
 
   @override
-  _StatusIndicatorState createState() => _StatusIndicatorState(this.lineIds, (this.api ?? TflApi()));
+  _StatusIndicatorState createState() =>
+      _StatusIndicatorState(this.lineIds, (this.api ?? TflApi()));
 }
 
 class Expandable {
@@ -65,7 +67,7 @@ class _StatusIndicatorState extends State<StatusIndicator> {
               return Center(child: CircularProgressIndicator());
             case ConnectionState.done:
               if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
+                return SnackBarHelper(SnackBar(content: Text('Failed to load line status')));
               }
 
               if (!snapshotLoaded) {
@@ -124,7 +126,7 @@ class _StatusIndicatorState extends State<StatusIndicator> {
                       padding: EdgeInsets.all(10.0),
                       child: Text(
                         item['name'],
-                        style: TextStyle(fontSize: 25),
+                        style: Theme.of(context).textTheme.title,
                       ),
                     ),
                     (showWarning

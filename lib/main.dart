@@ -52,13 +52,15 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => HomeScreen(),
-//        '/nearest': (context) => NearestStationScreen(),
-//        '/search': (context) => StationSearch(),
-//        '/sandbox': (context) => SandboxScreen()
       },
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          fontFamily: 'Montserrat',
+          textTheme: TextTheme(
+
+            headline: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            title: TextStyle(fontSize: 20),
+            body1: TextStyle(fontSize: 16, fontFamily: 'Hind'),
+          )),
     );
   }
 }
