@@ -5,6 +5,7 @@ import 'package:tfl/models/app_state.dart';
 import 'package:tfl/redux/actions.dart';
 import 'package:tfl/tfl/api.dart';
 import 'package:tfl/widgets/status_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StationDetail extends StatefulWidget {
   final stopPoint;
@@ -19,8 +20,6 @@ class _StationDetailState extends State<StationDetail> {
   _StationDetailState();
 
   BuildContext _snackBarContext;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +40,32 @@ class _StationDetailState extends State<StationDetail> {
 
                 return ListView(shrinkWrap: true, children: <Widget>[
                   ListTile(
-                    leading: isHomeStation
-                        ? Icon(Icons.home)
-                        : Icon(Icons.location_on),
-                    title: Text(widget.stopPoint['name'] ??
-                        widget.stopPoint['commonName']),
-                  ),
+                      leading: isHomeStation
+                          ? Icon(Icons.home)
+                          : Icon(Icons.location_on),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                              width: 150,
+                              child: Text(widget.stopPoint['name'] ??
+                                  widget.stopPoint['commonName'])),
+                          FlatButton(
+                            child: Icon(Icons.directions),
+                            onPressed: () async {
+                              final lat = widget.stopPoint['lat'];
+                              final lon = widget.stopPoint['lon'];
+                              final url =
+                                  "https://www.google.com/maps/dir/?api=1&destination=$lat,$lon&travelmode=walking";
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              } else {
+                                throw 'Could not launch $url';
+                              }
+                            },
+                          )
+                        ],
+                      )),
                   buildHomeButton(context, isHomeStation),
                 ]);
               },
@@ -62,7 +81,9 @@ class _StationDetailState extends State<StationDetail> {
                       return Center(child: CircularProgressIndicator());
                     case ConnectionState.done:
                       if (snapshot.hasError) {
-                        return SnackBarHelper(SnackBar(content: Text('Failed to load line data, please try again')));
+                        return SnackBarHelper(SnackBar(
+                            content: Text(
+                                'Failed to load line data, please try again')));
                       }
 
                       final lineIdRegex = new RegExp(r"^[a-zA-Z-]+$");
@@ -100,18 +121,19 @@ class _StationDetailState extends State<StationDetail> {
             callback(widget.stopPoint);
             final snackBar = SnackBar(
                 content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text('Home Station Saved'),
                 StoreConnector<AppState, UndoHomeStationCallback>(
                     converter: (store) {
-                      return () => store.dispatch(UndoHomeStation());
-                    },
-                    builder: (context, UndoHomeStationCallback callback) {
-                      return FlatButton(child: Text('Undo'), onPressed: () {
+                  return () => store.dispatch(UndoHomeStation());
+                }, builder: (context, UndoHomeStationCallback callback) {
+                  return FlatButton(
+                      child: Text('Undo'),
+                      onPressed: () {
                         callback();
                       });
-                    })
+                })
               ],
             ));
             Scaffold.of(context).showSnackBar(snackBar);
