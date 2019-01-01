@@ -11,8 +11,7 @@ class StationDetail extends StatefulWidget {
   StationDetail(this.stopPoint);
 
   @override
-  _StationDetailState createState() =>
-      _StationDetailState();
+  _StationDetailState createState() => _StationDetailState();
 }
 
 class _StationDetailState extends State<StationDetail> {
@@ -24,62 +23,63 @@ class _StationDetailState extends State<StationDetail> {
 
     return Container(
         child: ListView(shrinkWrap: true, children: <Widget>[
-          Card(
-            child: Column(
-              children: <Widget>[
-                StoreConnector<AppState, Map>(
-                  converter: (store) => store.state.homeStation,
-                  builder: (context, homeStation) {
+      Card(
+        child: Column(
+          children: <Widget>[
+            StoreConnector<AppState, Map>(
+              converter: (store) => store.state.homeStation,
+              builder: (context, homeStation) {
+                final isHomeStation = homeStation != null &&
+                    homeStation['id'] == widget.stopPoint['id'];
 
-                    final isHomeStation = homeStation != null && homeStation['id'] == widget.stopPoint['id'];
+                return ListView(shrinkWrap: true, children: <Widget>[
+                  ListTile(
+                    leading: isHomeStation
+                        ? Icon(Icons.home)
+                        : Icon(Icons.location_on),
+                    title: Text(widget.stopPoint['name'] ??
+                        widget.stopPoint['commonName']),
+                  ),
+                  buildHomeButton(context, isHomeStation),
+                ]);
+              },
+            ),
+            FutureBuilder<List>(
+                future: lineFuture,
+                // a previously-obtained Future<String> or null
+                builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                    case ConnectionState.active:
+                    case ConnectionState.waiting:
+                      return Center(child: CircularProgressIndicator());
+                    case ConnectionState.done:
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
 
-                    return ListView(shrinkWrap: true, children: <Widget>[
-                      ListTile(
-                        leading: isHomeStation ? Icon(Icons.home) : Icon(Icons.location_on),
-                        title: Text(widget.stopPoint['name'] ??
-                            widget.stopPoint['commonName']),
-                      ),
-                      buildHomeButton(context, isHomeStation),
-                    ]);
-                  },
-                ),
-                FutureBuilder<List>(
-                    future: lineFuture,
-                    // a previously-obtained Future<String> or null
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List> snapshot) {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.none:
-                        case ConnectionState.active:
-                        case ConnectionState.waiting:
-                          return Center(child: CircularProgressIndicator());
-                        case ConnectionState.done:
-                          if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          }
+                      final lineIdRegex = new RegExp(r"^[a-zA-Z-]+$");
 
-                          final lineIdRegex = new RegExp(r"^[a-zA-Z-]+$");
-
-                          final lineIds = snapshot.data
-                              .where((line) {
+                      final lineIds = snapshot.data
+                          .where((line) {
                             final id = line['id'];
                             return lineIdRegex.hasMatch(id);
                           })
-                              .map((line) => line['id'])
-                              .toSet()
-                              .toList();
+                          .map((line) => line['id'])
+                          .toSet()
+                          .toList();
 
-                          return StatusIndicator(lineIds);
-                      }
-                    })
-              ],
-            ),
-          ),
-        ]));
+                      return StatusIndicator(lineIds);
+                  }
+                })
+          ],
+        ),
+      ),
+    ]));
   }
 
   buildHomeButton(BuildContext context, bool isHomeStation) {
-    if(isHomeStation) {
+    if (isHomeStation) {
       return Text('');
     }
     return StoreConnector<AppState, SetHomeStationCallback>(
@@ -91,7 +91,22 @@ class _StationDetailState extends State<StationDetail> {
           child: Text('Set as home station'),
           onPressed: () {
             callback(widget.stopPoint);
-            final snackBar = SnackBar(content: Text('Station saved'));
+            final snackBar = SnackBar(
+                content: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('Home Station Saved'),
+                StoreConnector<AppState, UndoHomeStationCallback>(
+                    converter: (store) {
+                      return () => store.dispatch(UndoHomeStation());
+                    },
+                    builder: (context, UndoHomeStationCallback callback) {
+                      return FlatButton(child: Text('Undo'), onPressed: () {
+                        callback();
+                      });
+                    })
+              ],
+            ));
             Scaffold.of(context).showSnackBar(snackBar);
           },
         );
@@ -101,3 +116,4 @@ class _StationDetailState extends State<StationDetail> {
 }
 
 typedef SetHomeStationCallback = Function(Map homeStation);
+typedef UndoHomeStationCallback = Function();

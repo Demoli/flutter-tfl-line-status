@@ -3,7 +3,9 @@ import 'dart:convert';
 class AppState {
   final Map homeStation;
 
-  AppState({this.homeStation});
+  final Map previousHomeStation;
+
+  AppState({this.homeStation, this.previousHomeStation});
 
   static AppState fromJson(dynamic json) {
     if (json == null) {

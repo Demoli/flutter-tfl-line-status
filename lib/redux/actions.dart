@@ -3,3 +3,5 @@ class SetHomeStation {
 
   SetHomeStation(this.homeStation);
 }
+
+class UndoHomeStation {}
