@@ -87,54 +87,50 @@ class _NearestStationState extends State<NearestStation> {
     final stopPointFuture =
         api.getStopPointsByLocation(position.latitude, position.longitude);
 
-    return ListView(
-      shrinkWrap: true,
-      children: <Widget>[
-        Padding(
-            padding: EdgeInsets.only(top: 15, bottom: 5),
-            child: Text('Nearest Station',
-                style: Theme.of(context).textTheme.headline)),
-        FutureBuilder<List>(
-            future: stopPointFuture,
-            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                case ConnectionState.active:
-                case ConnectionState.waiting:
-                  return Center(child: CircularProgressIndicator());
-                case ConnectionState.done:
-                  if (snapshot.hasError) {
-                    return SnackBarHelper(SnackBar(
-                        content: Text(
-                            'Failed to load nearest station data, please try again')));
-                  }
-
-                  final stopPoints = snapshot.data;
-
-                  if (stopPoints.length == 0) {
-                    return Text(
-                        "No stations within 2km, please check location settings, or call for a taxi");
-                  }
-
-                  final closest = stopPoints.removeAt(0);
-
-                  return StoreConnector<AppState, Map>(
-                    converter: (store) => store.state.homeStation,
-                    builder: (context, homeStation) {
-                      final isHomeStation = homeStation != null &&
-                          homeStation['id'] == closest['id'];
-
-                      if (isHomeStation) {
-                        return Text('');
-                      }
-
-                      return Injector.getInjector().get<StationDetail>(
-                          additionalParameters: {'stopPoint': closest});
-                    },
-                  );
+    return FutureBuilder<List>(
+        future: stopPointFuture,
+        builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.active:
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+            case ConnectionState.done:
+              if (snapshot.hasError) {
+                return SnackBarHelper(SnackBar(
+                    content: Text(
+                        'Failed to load nearest station data, please try again')));
               }
-            })
-      ],
-    );
+
+              final stopPoints = snapshot.data;
+
+              if (stopPoints.length == 0) {
+                return Text(
+                    "No stations within 2km, please check location settings, or call for a taxi");
+              }
+
+              final closest = stopPoints.removeAt(0);
+
+              return StoreConnector<AppState, Map>(
+                  converter: (store) => store.state.homeStation,
+                  builder: (context, homeStation) {
+                    final isHomeStation = homeStation != null &&
+                        homeStation['id'] == closest['id'];
+
+                    if (isHomeStation) {
+                      return Container();
+                    }
+
+                    return ListView(shrinkWrap: true, children: <Widget>[
+                      Padding(
+                          padding: EdgeInsets.only(top: 15, bottom: 5),
+                          child: Text('Nearest Station',
+                              style: Theme.of(context).textTheme.headline)),
+                      Injector.getInjector().get<StationDetail>(
+                          additionalParameters: {'stopPoint': closest})
+                    ]);
+                  });
+          }
+        });
   }
 }

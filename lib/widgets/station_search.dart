@@ -27,7 +27,7 @@ class _StationSearchState extends State<StationSearch> {
               textFieldConfiguration: TextFieldConfiguration(
                 autofocus: false,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(), hintText: 'Station Name'),
+                    border: OutlineInputBorder(), hintText: 'Find Station'),
               ),
               suggestionsCallback: (pattern) async {
                 final stations = await api.searchStationByName(pattern);
