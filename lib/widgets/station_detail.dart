@@ -34,7 +34,7 @@ class _StationDetailState extends State<StationDetail> {
     final lineFuture = TflApi().getLinesByStopPoint(widget.stopPoint['id']);
 
     return Container(
-        child: ListView(shrinkWrap: true, children: <Widget>[
+        child: Column(children: <Widget>[
       Card(
         child: Column(
           children: <Widget>[
@@ -53,66 +53,65 @@ class _StationDetailState extends State<StationDetail> {
                         .length >
                     0;
 
-                return ListView(shrinkWrap: true, children: <Widget>[
-                  ListTile(
-                      leading: isHomeStation
-                          ? Icon(Icons.home)
-                          : Icon(Icons.location_on),
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                              width: 150,
-                              child: Text(widget.stopPoint['name'] ??
-                                  widget.stopPoint['commonName'])),
-                          Container(
-                            width: 50,
-                            child: FlatButton(
-                              child: Icon(Icons.directions),
-                              onPressed: () async {
-                                final lat = widget.stopPoint['lat'];
-                                final lon = widget.stopPoint['lon'];
-                                final url =
-                                    "https://www.google.com/maps/dir/?api=1&destination=$lat,$lon&travelmode=walking";
-                                if (await canLaunch(url)) {
-                                  await launch(url);
-                                } else {
-                                  throw 'Could not launch $url';
-                                }
-                              },
-                            ),
+                return Column(children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                            width: 150,
+                            child: Text(widget.stopPoint['name'] ??
+                                widget.stopPoint['commonName'])),
+                        Container(
+                          width: 50,
+                          child: FlatButton(
+                            child: Icon(Icons.directions),
+                            onPressed: () async {
+                              final lat = widget.stopPoint['lat'];
+                              final lon = widget.stopPoint['lon'];
+                              final url =
+                                  "https://www.google.com/maps/dir/?api=1&destination=$lat,$lon&travelmode=walking";
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              } else {
+                                throw 'Could not launch $url';
+                              }
+                            },
                           ),
-                          Container(
-                            width: 50,
-                            child: FlatButton(
-                              child: Icon(Icons.refresh),
-                              onPressed: () async {
-                                setState(() {});
-                              },
-                            ),
+                        ),
+                        Container(
+                          width: 50,
+                          child: FlatButton(
+                            child: Icon(Icons.refresh),
+                            onPressed: () async {
+                              setState(() {});
+                            },
                           ),
-                          Container(
-                              width: 50,
-                              child: StoreConnector<AppState,
-                                  toggleFavouriteCallback>(
-                                converter: (store) {
-                                  return (favourite) => store
-                                      .dispatch(ToggleFavourite(favourite));
-                                },
-                                builder: (context,
-                                    toggleFavouriteCallback callback) {
-                                  return FlatButton(
-                                    child: isFavourite
-                                        ? Icon(Icons.favorite)
-                                        : Icon(Icons.favorite_border),
-                                    onPressed: () async {
-                                      callback(widget.stopPoint);
-                                    },
-                                  );
-                                },
-                              )),
-                        ],
-                      )),
+                        ),
+                        Container(
+                            width: 50,
+                            child: StoreConnector<AppState,
+                                toggleFavouriteCallback>(
+                              converter: (store) {
+                                return (favourite) =>
+                                    store.dispatch(ToggleFavourite(favourite));
+                              },
+                              builder:
+                                  (context, toggleFavouriteCallback callback) {
+                                return FlatButton(
+                                  child: isFavourite
+                                      ? Icon(Icons.favorite)
+                                      : Icon(Icons.favorite_border),
+                                  onPressed: () async {
+                                    callback(widget.stopPoint);
+                                  },
+                                );
+                              },
+                            )),
+                      ],
+                    ),
+                  ),
                   buildHomeButton(context, isHomeStation),
                 ]);
               },

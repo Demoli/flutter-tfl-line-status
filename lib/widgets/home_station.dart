@@ -17,9 +17,8 @@ class _HomeStationState extends State<HomeStation> {
         return store.state.homeStation;
       },
       builder: (context, homeStation) {
-
         if (homeStation == null) {
-          return Text('');
+          return Center(child: Text('No home station set'));
         }
 
         return Injector.getInjector().get<StationDetail>(
