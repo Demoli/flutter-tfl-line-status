@@ -161,7 +161,7 @@ class _StationDetailState extends State<StationDetail> {
         return (age) => store.dispatch(SetHomeStation(age));
       },
       builder: (context, SetHomeStationCallback callback) {
-        return RaisedButton(
+        return FlatButton(
           child: Text('Set as home station'),
           onPressed: () {
             callback(widget.stopPoint);
