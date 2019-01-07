@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:tfl/helpers/snakcbar.dart';
@@ -19,12 +21,15 @@ class StationDetail extends StatefulWidget {
 class _StationDetailState extends State<StationDetail> {
   _StationDetailState();
 
-  BuildContext _snackBarContext;
+  @override
+  void initState() {
+    Timer refresh = Timer(Duration(seconds: 30), () {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    _snackBarContext = context;
-
     final lineFuture = TflApi().getLinesByStopPoint(widget.stopPoint['id']);
 
     return Container(
@@ -50,19 +55,31 @@ class _StationDetailState extends State<StationDetail> {
                               width: 150,
                               child: Text(widget.stopPoint['name'] ??
                                   widget.stopPoint['commonName'])),
-                          FlatButton(
-                            child: Icon(Icons.directions),
-                            onPressed: () async {
-                              final lat = widget.stopPoint['lat'];
-                              final lon = widget.stopPoint['lon'];
-                              final url =
-                                  "https://www.google.com/maps/dir/?api=1&destination=$lat,$lon&travelmode=walking";
-                              if (await canLaunch(url)) {
-                                await launch(url);
-                              } else {
-                                throw 'Could not launch $url';
-                              }
-                            },
+                          Container(
+                            width: 50,
+                            child: FlatButton(
+                              child: Icon(Icons.directions),
+                              onPressed: () async {
+                                final lat = widget.stopPoint['lat'];
+                                final lon = widget.stopPoint['lon'];
+                                final url =
+                                    "https://www.google.com/maps/dir/?api=1&destination=$lat,$lon&travelmode=walking";
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                            ),
+                          ),
+                          Container(
+                            width: 50,
+                            child: FlatButton(
+                              child: Icon(Icons.refresh),
+                              onPressed: () async {
+                                setState(() {});
+                              },
+                            ),
                           )
                         ],
                       )),

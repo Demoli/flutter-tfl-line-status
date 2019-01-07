@@ -38,7 +38,7 @@ class _NearestStationState extends State<NearestStation> {
 
   _NearestStationState(this.api, this.geolocator) {
     locationUpdate = geolocator.getPositionStream(new LocationOptions(
-        accuracy: LocationAccuracy.high, distanceFilter: 20));
+        accuracy: LocationAccuracy.high, distanceFilter: 100));
   }
 
   @override
