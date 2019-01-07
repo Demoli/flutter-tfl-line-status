@@ -23,7 +23,8 @@ class _StationDetailState extends State<StationDetail> {
 
   @override
   void initState() {
-    Timer refresh = Timer(Duration(seconds: 30), () {
+    // refresh every 30 seconds
+    Timer(Duration(seconds: 30), () {
       setState(() {});
     });
   }
@@ -37,11 +38,20 @@ class _StationDetailState extends State<StationDetail> {
       Card(
         child: Column(
           children: <Widget>[
-            StoreConnector<AppState, Map>(
-              converter: (store) => store.state.homeStation,
-              builder: (context, homeStation) {
+            StoreConnector<AppState, AppState>(
+              converter: (store) => store.state,
+              builder: (context, appState) {
+                final homeStation = appState.homeStation;
                 final isHomeStation = homeStation != null &&
                     homeStation['id'] == widget.stopPoint['id'];
+
+                final isFavourite = appState.favourites
+                        .where((favourite) {
+                          return widget.stopPoint['id'] == favourite['id'];
+                        })
+                        .toList()
+                        .length >
+                    0;
 
                 return ListView(shrinkWrap: true, children: <Widget>[
                   ListTile(
@@ -80,7 +90,27 @@ class _StationDetailState extends State<StationDetail> {
                                 setState(() {});
                               },
                             ),
-                          )
+                          ),
+                          Container(
+                              width: 50,
+                              child: StoreConnector<AppState,
+                                  toggleFavouriteCallback>(
+                                converter: (store) {
+                                  return (favourite) => store
+                                      .dispatch(ToggleFavourite(favourite));
+                                },
+                                builder: (context,
+                                    toggleFavouriteCallback callback) {
+                                  return FlatButton(
+                                    child: isFavourite
+                                        ? Icon(Icons.favorite)
+                                        : Icon(Icons.favorite_border),
+                                    onPressed: () async {
+                                      callback(widget.stopPoint);
+                                    },
+                                  );
+                                },
+                              )),
                         ],
                       )),
                   buildHomeButton(context, isHomeStation),
@@ -163,3 +193,4 @@ class _StationDetailState extends State<StationDetail> {
 
 typedef SetHomeStationCallback = Function(Map homeStation);
 typedef UndoHomeStationCallback = Function();
+typedef toggleFavouriteCallback = Function(Map station);

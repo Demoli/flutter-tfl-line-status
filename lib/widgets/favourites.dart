@@ -12,18 +12,28 @@ class Favourites extends StatefulWidget {
 class _FavouritesState extends State<Favourites> {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, Map>(
+    return StoreConnector<AppState, List>(
       converter: (store) {
-//        return store.state.favourites;
+        return store.state.favourites;
       },
-      builder: (context, Favourites) {
-
-        if (Favourites == null) {
-          return Text('');
+      builder: (context, favourites) {
+        if (Favourites == null || favourites.length == 0) {
+          return Container(
+            child: Center(
+              child: Text('No Favourites'),
+            ),
+          );
         }
 
-        return Injector.getInjector().get<StationDetail>(
-            additionalParameters: {'stopPoint': Favourites});
+        return Expanded(
+          child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: favourites.length,
+              itemBuilder: (context, index) {
+                return Injector.getInjector().get<StationDetail>(
+                    additionalParameters: {'stopPoint': favourites[index]});
+              }),
+        );
       },
     );
   }

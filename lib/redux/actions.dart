@@ -5,3 +5,9 @@ class SetHomeStation {
 }
 
 class UndoHomeStation {}
+
+class ToggleFavourite {
+  Map station;
+
+  ToggleFavourite(this.station);
+}

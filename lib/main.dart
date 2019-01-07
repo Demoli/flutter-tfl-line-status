@@ -18,7 +18,12 @@ void main() async {
   );
 
   // Load initial state
-  final initialState = await persistor.load();
+  AppState initialState = AppState();
+  try {
+     initialState = await persistor.load();
+  } catch (e) {
+    print(e);
+  }
 
   final store = new Store<AppState>(
     appReducers,
@@ -56,7 +61,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           fontFamily: 'Montserrat',
           textTheme: TextTheme(
-
             headline: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             title: TextStyle(fontSize: 20),
             body1: TextStyle(fontSize: 16, fontFamily: 'Hind'),

@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
               bottom: TabBar(tabs: [
                 Tab(child: Text('Home')),
                 Tab(child: Text('Nearest')),
-//                Tab(child: Text('Favourites')),
+                Tab(child: Text('Favourites')),
               ]),
             ),
             body: TabBarView(
@@ -35,7 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 Injector.getInjector().get<NearestStation>(),
-//                Injector.getInjector().get<Favourites>(),
+                Column(
+                  children: <Widget>[
+                    Injector.getInjector().get<StationSearch>(),
+                    Injector.getInjector().get<Favourites>(),
+                  ],
+                ),
               ],
             )));
   }
