@@ -114,20 +114,18 @@ class _NearestStationState extends State<NearestStation> {
               return StoreConnector<AppState, Map>(
                   converter: (store) => store.state.homeStation,
                   builder: (context, homeStation) {
-                    final isHomeStation = homeStation != null &&
-                        homeStation['id'] == closest['id'];
-
-                    if (isHomeStation) {
-                      return Container();
-                    }
+//                    final isHomeStation = homeStation != null &&
+//                        homeStation['id'] == closest['id'];
+//
+//                    if (isHomeStation) {
+//                      return Container();
+//                    }
 
                     return ListView(shrinkWrap: true, children: <Widget>[
                       Padding(
                           padding: EdgeInsets.only(top: 15, bottom: 5),
-                          child: Text('Nearest Station',
-                              style: Theme.of(context).textTheme.headline)),
-                      Injector.getInjector().get<StationDetail>(
-                          additionalParameters: {'stopPoint': closest})
+                          child: Injector.getInjector().get<StationDetail>(
+                              additionalParameters: {'stopPoint': closest})),
                     ]);
                   });
           }

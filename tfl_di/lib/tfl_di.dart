@@ -2,6 +2,7 @@ library tfl_di;
 
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:tfl/tfl/api.dart';
+import 'package:tfl/widgets/favourites.dart';
 import 'package:tfl/widgets/home_station.dart';
 import 'package:tfl/widgets/nearest_station.dart';
 import 'package:tfl/widgets/station_detail.dart';
@@ -19,6 +20,7 @@ void configureInjector([String name = "default"]) {
       i.get<TflApi>(), new Geolocator()));
   injector.map<StationSearch>((i) => new StationSearch(i.get<TflApi>()));
   injector.map<HomeStation>((i) => new HomeStation());
+  injector.map<Favourites>((i) => new Favourites());
 
   injector.mapWithParams<StationDetail>((i, p) => new StationDetail(p['stopPoint']));
 }
