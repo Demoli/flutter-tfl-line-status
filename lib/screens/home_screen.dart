@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
             appBar: AppBar(
               // Here we take the value from the HomeScreen object that was created by
               // the App.build method, and use it to set our appbar title.
-              title: Text("Home and Nearest Stations"),
+              title: Text("TFL"),
               bottom: TabBar(tabs: [
                 Tab(child: Text('Home')),
                 Tab(child: Text('Nearest')),

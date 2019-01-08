@@ -18,10 +18,8 @@ class _FavouritesState extends State<Favourites> {
       },
       builder: (context, favourites) {
         if (Favourites == null || favourites.length == 0) {
-          return Container(
-            child: Center(
-              child: Text('No Favourites'),
-            ),
+          return Center(
+            child: Text('No Favourites'),
           );
         }
 
